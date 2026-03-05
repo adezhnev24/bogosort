@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define eps 1.0e-12
+
+int isZero(double x) {
+    return fabs(x) < eps;
+}
+
+void swap(double **matrix, int i, int j) {
+    double* temp = matrix[i];
+    matrix[i] = matrix[j];
+    matrix[j] = temp;
+}
+
+int main(void) {
+    int N,i,j,k, flag=0;
+    double coeff, det;
+    scanf("%d", &N);
+
+    double **matrix = (double**)malloc(N * sizeof(double*));
+    for (i = 0; i < N; i++) {
+        matrix[i] = (double*)malloc(N * sizeof(double));
+    }
+
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < N; j++) {
+            scanf("%lf", &matrix[i][j]);
+        }
+    }
+
+    for (i = 0; i < N-1; i++) {
+        if (isZero(matrix[i][i])) {
+            for (j = i+1; j < N; j++) {
+                if (!isZero(matrix[j][i])) {
+                    swap(matrix, i, j);
+                    flag = (flag + 1) % 2;
+                    j = N; // exit from cycle without break
+                }
+            }
+        }
+
+        if (!isZero(matrix[i][i])) {
+            for (j = i+1; j < N; j++) {
+                coeff = matrix[j][i] / matrix[i][i];
+                for (k = i; k < N; k++) {
+                    matrix[j][k] -= coeff * matrix[i][k];
+                }
+
+            }
+        }
+    }
+
+    det = (!flag ? 1 : -1);
+    for (i = 0; i < N; i++) {
+        det*= matrix[i][i];
+    }
+
+    if (isZero(det)) printf("Determinant = 0.000000");
+    else printf("Determinant = %.6lf\n", det);
+
+    for (i = 0; i < N; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
+
+    return 0;
+}
