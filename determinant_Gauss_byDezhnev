@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #define eps 1.0e-12
+#define ll long long
 
 int isZero(double x) {
     return fabs(x) < eps;
@@ -14,8 +15,9 @@ void swap(double **matrix, int i, int j) {
 }
 
 int main(void) {
-    int N,i,j,k, flag=0;
-    double coeff, det;
+    int N, i, j, k, flag = 0;
+    double coeff;
+    ll det;
     scanf("%d", &N);
 
     double **matrix = (double**)malloc(N * sizeof(double*));
@@ -46,18 +48,17 @@ int main(void) {
                 for (k = i; k < N; k++) {
                     matrix[j][k] -= coeff * matrix[i][k];
                 }
-
             }
         }
     }
 
     det = (!flag ? 1 : -1);
     for (i = 0; i < N; i++) {
-        det*= matrix[i][i];
+        det *= (ll)matrix[i][i];
     }
 
-    if (isZero(det)) printf("Determinant = 0.000000");
-    else printf("Determinant = %.6lf\n", det);
+    if (det == 0) printf("Determinant = 0.000000");
+    else printf("Determinant = %lld.000000\n", det);
 
     for (i = 0; i < N; i++) {
         free(matrix[i]);
